@@ -16,7 +16,10 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  void _getListApi() {
+  MoviesList? movies;
+
+  Future <void> _getListApi() async {
+    await Future.delayed(Duration(seconds: 5));
     http.get(
       Uri.https('api.themoviedb.org', '4/list/1'),
       headers: {
@@ -25,10 +28,13 @@ class _MainAppState extends State<MainApp> {
       },
     ).then((Response value) {
       if (value.statusCode == 200) {
-        MoviesList movies = MoviesList.fromJson(
+        movies = MoviesList.fromJson(
           jsonDecode(value.body),
         );
-        print(movies);
+        print(movies.toString());
+        setState(() {
+
+        });
       }
     });
   }
@@ -41,6 +47,13 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.blueGrey,
+        body: Center(
+          child: Text('Movie: ${movies?.name ?? 'Erro'}'),
+        ),
+      ),
+    );
   }
 }
